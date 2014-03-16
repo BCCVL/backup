@@ -1,0 +1,19 @@
+#!/bin/sh
+PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+export PATH
+#
+#       usage:
+#               plone-backup error_log staging_dir plone_store
+#
+ERROR_LOG=$1
+STAGING_DIR=$2
+PLONE_STORE=$3
+DATE=`date +%Y%m%d`
+mkdir -p $STAGING_DIR/repozo
+/home/plone/bccvl_buildout/bin/repozo -B -F --repository=$STAGING_DIR/repozo --file=$PLONE_STORE 2>> $ERROR_LOG
+if test $? -ne 0
+then
+	echo "$0: $DATE - repozo failed" >> $ERROR_LOG
+	exit 1
+fi
+exit 0

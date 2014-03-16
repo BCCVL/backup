@@ -1,0 +1,49 @@
+#!/bin/sh
+PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/sbin:/opt/backup/bin
+export PATH
+#
+#	usage:
+#		all-backup
+#
+CONFIGURATION_FILE=/opt/backup/etc/all-backup.cfg
+if test -r $CONFIGURATION_FILE
+then
+	. $CONFIGURATION_FILE
+fi
+DATE=`date +%Y%m%d%H%M%S`
+SHORT_DATE=`date +%Y%m%d`
+ERROR_LOG=/var/log/all-backup.$DATE.log
+touch $ERROR_LOG
+HOSTNAME=`hostname`
+PASSPHRASE=`cat /opt/backup/etc/duplicity/duplicity_passphrase`
+export PASSPHRASE
+rm -rf $STAGING_DIR
+mkdir -p $STAGING_DIR
+if test $ETC_BACKUP -eq 1
+then
+	etc-backup $ERROR_LOG $STAGING_DIR
+fi
+if test $VAR_LOG_BACKUP -eq 1
+then
+	var_log-backup $ERROR_LOG $STAGING_DIR
+fi
+if test $MYSQL_BACKUP -eq 1
+then
+	mysql-backup $ERROR_LOG $STAGING_DIR
+fi
+if test $S4_BACKUP -eq 1
+then
+	4s-backup $ERROR_LOG $STAGING_DIR
+fi
+if test $PLONE_BACKUP -eq 1
+then
+	plone-backup $ERROR_LOG $STAGING_DIR $PLONE_STORE
+fi
+if test $POSTGRESQL_BACKUP -eq 1
+then
+	postgresql-backup $ERROR_LOG $STAGING_DIR
+fi
+ssh $BACKUP_ID@$BACKUP_HOST mkdir -p $BACKUP_HOME/$HOSTNAME/$SHORT_DATE >> $ERROR_LOG
+duplicity full --allow-source-mismatch $STAGING_DIR scp://$BACKUP_ID@$BACKUP_HOST/$BACKUP_HOME/$HOSTNAME/$SHORT_DATE >> $ERROR_LOG 2>&1
+duplicity collection-status scp://$BACKUP_ID@$BACKUP_HOST/$BACKUP_HOME/$HOSTNAME/$SHORT_DATE >> $ERROR_LOG
+ssh $BACKUP_ID@$BACKUP_HOST df -h $BACKUP_HOME >> $ERROR_LOG

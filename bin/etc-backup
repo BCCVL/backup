@@ -1,0 +1,20 @@
+#!/bin/sh
+PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+export PATH
+#
+#	usage:
+#		etc-backup error_log staging_dir
+#
+ERROR_LOG=$1
+STAGING_DIR=$2
+touch $ERROR_LOG
+mkdir -p $STAGING_DIR
+DATE=`date +%Y%m%d`
+cd /
+tar cpf - etc | gzip -c > $STAGING_DIR/etc.tgz
+if test $? -ne 0
+then
+	echo "$0: $DATE - gzip failed" >> $ERROR_LOG
+	exit 1
+fi
+exit 0

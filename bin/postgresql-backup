@@ -1,0 +1,20 @@
+#!/bin/sh
+PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+export PATH
+#
+#       usage:
+#               postgres-backup error_log staging_dir
+#
+ERROR_LOG=$1
+STAGING_DIR=$2
+DATE=`date +%Y%m%d`
+mkdir -p $STAGING_DIR
+chown postgres:postgres $STAGING_DIR
+su - postgres -c "pg_dumpall > $STAGING_DIR/all-databases.pgsql.$DATE"
+chown root:root $STAGING_DIR
+if test $? -ne 0
+then
+	echo "$0: $DATE - su/pg_dumpall failed" 
+	exit 1
+fi
+exit 0
