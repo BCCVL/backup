@@ -27,6 +27,10 @@ if test $VAR_LOG_BACKUP -eq 1
 then
 	var_log-backup $ERROR_LOG $STAGING_DIR
 fi
+if test $VAR_WWW_BACKUP -eq 1
+then
+	var_www-backup $ERROR_LOG $STAGING_DIR
+fi
 if test $MYSQL_BACKUP -eq 1
 then
 	mysql-backup $ERROR_LOG $STAGING_DIR

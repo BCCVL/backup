@@ -16,4 +16,12 @@ then
 	echo "$0: $DATE - repozo failed" >> $ERROR_LOG
 	exit 1
 fi
+mkdir -p $STAGING_DIR/plone
+cd /home
+tar cpf - plone/bccvl_buildout/var | gzip -c > $STAGING_DIR/plone/var.tgz
+if test $? -ne 0
+then
+	echo "$0: $DATE - gzip failed" >> $ERROR_LOG
+	exit 1
+fi
 exit 0
