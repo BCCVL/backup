@@ -1,0 +1,20 @@
+#!/bin/sh
+PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+export PATH
+#
+#	usage:
+#		mongodb-backup error_log staging_dir
+#
+ERROR_LOG=$1
+STAGING_DIR=$2
+DATE=`date +%Y%m%d`
+touch $ERROR_LOG
+mkdir -p $STAGING_DIR
+cd $STAGING_DIR
+mongodump 1>&2 2>> $ERROR_LOG
+if test $? -ne 0
+then
+	echo "$0: $DATE - mongodump failed" >> $ERROR_LOG
+	exit 1
+fi
+exit 0
