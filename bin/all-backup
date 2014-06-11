@@ -35,6 +35,10 @@ if test $MYSQL_BACKUP -eq 1
 then
 	mysql-backup $ERROR_LOG $STAGING_DIR
 fi
+if test $MONGODB_BACKUP -eq 1
+then
+	mongodb-backup $ERROR_LOG $STAGING_DIR
+fi
 if test $S4_BACKUP -eq 1
 then
 	4s-backup $ERROR_LOG $STAGING_DIR
