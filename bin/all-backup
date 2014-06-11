@@ -20,9 +20,17 @@ PASSPHRASE=`cat /opt/backup/etc/duplicity/duplicity_passphrase`
 export PASSPHRASE
 rm -rf $STAGING_DIR
 mkdir -p $STAGING_DIR
+if test $BACKUP_BACKUP -eq 1
+then
+	backup-backup $ERROR_LOG $STAGING_DIR
+fi
 if test $ETC_BACKUP -eq 1
 then
 	etc-backup $ERROR_LOG $STAGING_DIR
+fi
+if test $SRV_BACKUP -eq 1
+then
+	srv-backup $ERROR_LOG $STAGING_DIR
 fi
 if test $VAR_LOG_BACKUP -eq 1
 then
