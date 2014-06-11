@@ -12,7 +12,8 @@ then
 fi
 DATE=`date +%Y%m%d%H%M%S`
 SHORT_DATE=`date +%Y%m%d`
-ERROR_LOG=/var/log/all-backup.$DATE.log
+ERROR_LOG=/var/log/backup/all-backup.$DATE.log
+mkdir -p /var/log/backup
 touch $ERROR_LOG
 HOSTNAME=`hostname`
 ssh $BACKUP_ID@$BACKUP_HOST "(cd $BACKUP_HOME; find . -mtime +$EXPIRY_TIME -exec ls -l {} \";\" )"
