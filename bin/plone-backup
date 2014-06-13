@@ -10,18 +10,35 @@ STAGING_DIR=$2
 PLONE_STORE=$3
 DATE=`date +%Y%m%d`
 mkdir -p $STAGING_DIR/repozo
-/home/plone/bccvl_buildout/bin/repozo -B -F --repository=$STAGING_DIR/repozo --file=$PLONE_STORE 2>> $ERROR_LOG
+LD_LIBRARY_PATH=/opt/rh/python27/root/usr/lib64 /home/plone/bccvl_buildout/bin/repozo -B -F --repository=$STAGING_DIR/repozo --file=$PLONE_STORE 2>> $ERROR_LOG
 if test $? -ne 0
 then
 	echo "$0: $DATE - repozo failed" >> $ERROR_LOG
 	exit 1
 fi
 mkdir -p $STAGING_DIR/plone
+f test ! -d /home/plone/bccvl_buildout/var
+then
+        echo "$O: $DATE - /home/plone/bccvl_buildout/var does not exist" >> $ERROR_LOG
+        exit 1
+fi
 cd /home
 tar cpf - plone/bccvl_buildout/var | gzip -c > $STAGING_DIR/plone/var.tgz
 if test $? -ne 0
 then
 	echo "$0: $DATE - gzip failed" >> $ERROR_LOG
 	exit 1
+fi
+if test ! -d /mnt/plone_var
+then
+        echo "$O: $DATE - /mnt/plone_var does not exist" >> $ERROR_LOG
+        exit 1
+fi
+cd /mnt
+tar cpf - plone_var | gzip -c > $STAGING_DIR/plone/plone_var.tgz
+if test $? -ne 0
+then
+        echo "$0: $DATE - gzip failed" >> $ERROR_LOG
+        exit 1
 fi
 exit 0
