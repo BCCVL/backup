@@ -19,4 +19,4 @@ PASSPHRASE=`cat /opt/backup/etc/duplicity/duplicity_passphrase`
 export PASSPHRASE
 rm -rf $TMP_DIR
 mkdir -p $TMP_DIR
-duplicity restore $TMP_DIR scp://$BACKUP_ID@$BACKUP_HOST/$BACKUP_HOME/$HOSTNAME/$DATE_OF_INTEREST
+duplicity restore scp://$BACKUP_ID@$BACKUP_HOST/$BACKUP_HOME/$HOSTNAME/$DATE_OF_INTEREST $TMP_DIR
