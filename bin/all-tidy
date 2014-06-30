@@ -17,3 +17,4 @@ mkdir -p /var/log/backup
 touch $ERROR_LOG
 HOSTNAME=`hostname`
 ssh $BACKUP_ID@$BACKUP_HOST "(cd $BACKUP_HOME; find . -mtime +$EXPIRY_TIME -exec ls -l {} \";\" )"
+ssh $BACKUP_ID@$BACKUP_HOST "(cd $BACKUP_HOME; find . -mtime +$EXPIRY_TIME -exec rm -rf {} \";\" )"
