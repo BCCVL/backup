@@ -16,5 +16,5 @@ ERROR_LOG=/var/log/backup/all-tidy.$DATE.log
 mkdir -p /var/log/backup
 touch $ERROR_LOG
 HOSTNAME=`hostname`
-ssh $BACKUP_ID@$BACKUP_HOST "(cd $BACKUP_HOME; find . -mtime +$EXPIRY_TIME -exec ls -l {} \";\" )"
-ssh $BACKUP_ID@$BACKUP_HOST "(cd $BACKUP_HOME; find . -mtime +$EXPIRY_TIME -exec rm -rf {} \";\" )"
+ssh $BACKUP_ID@$BACKUP_HOST "(cd $BACKUP_HOME; find . -mtime +$EXPIRY_TIME -type f -print)" >> ERROR_LOG 2>&1
+ssh $BACKUP_ID@$BACKUP_HOST "(cd $BACKUP_HOME; find . -mtime +$EXPIRY_TIME -type f -delete)" >> ERROR_LOG 2>&1
